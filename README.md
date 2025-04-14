@@ -6,7 +6,7 @@ Backend criado para o desafio de React Native com autenticação via Firebase e 
 
 ## 🔐 Autenticação
 
-Todas as rotas exigem autenticação via Firebase Authentication.
+Todas as rotas (exceto testes locais) exigem autenticação via Firebase Authentication.
 
 **Header obrigatório em todas as rotas protegidas:**
 
@@ -41,13 +41,40 @@ Retorna os dados do usuário autenticado.
 
 ---
 
+### 👤 PUT `/profile/name`
+
+Atualiza o nome do usuário autenticado.
+
+#### 🔒 Protegida? Sim
+
+#### 📅 Body:
+
+```json
+{
+  "name": "João da Silva"
+}
+```
+
+#### 🔎 Regras:
+
+- O campo `name` deve ser uma string não vazia
+- O nome é salvo no Firestore na coleção `users`
+
+#### ✅ Resposta:
+
+```
+200 OK
+```
+
+---
+
 ### 👤 PUT `/profile/avatar`
 
 Atualiza o avatar do usuário autenticado.
 
 #### 🔒 Protegida? Sim
 
-#### 📥 Body:
+#### 📅 Body:
 
 ```json
 {
@@ -96,7 +123,7 @@ Cria uma nova tarefa.
 
 #### 🔒 Protegida? Sim
 
-#### 📥 Body:
+#### 📅 Body:
 
 ```json
 {
@@ -120,7 +147,7 @@ Atualiza uma tarefa existente.
 
 #### 🔒 Protegida? Sim
 
-#### 📥 Body (qualquer campo opcional):
+#### 📅 Body (qualquer campo opcional):
 
 ```json
 {
