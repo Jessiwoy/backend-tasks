@@ -187,4 +187,4 @@ O app React Native deverá:
 
 ---
 
-📘 Desafio proposto por: **Professor de React Native**
+📘 Desafio proposto por: **Gabriel Santos**
