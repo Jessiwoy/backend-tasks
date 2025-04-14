@@ -6,7 +6,7 @@ const firestore = require("../services/firestore");
 router.use(auth);
 
 router.get("/", async (req, res) => {
-  const tasks = await firestore.getUserTasks(req.user.uid);
+  const tasks = await firestore.getUserTasks(req.user.uid, req.user.email);
   res.json(tasks);
 });
 
@@ -69,6 +69,24 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   await firestore.deleteTask(req.params.id);
   res.sendStatus(204);
+});
+
+router.put("/:id/share", async (req, res) => {
+  const { sharedWith } = req.body;
+
+  if (
+    !Array.isArray(sharedWith) ||
+    !sharedWith.every((email) => typeof email === "string")
+  ) {
+    return res.status(400).json({ error: "Lista de e-mails inválida" });
+  }
+
+  try {
+    await firestore.shareTask(req.params.id, sharedWith);
+    res.sendStatus(200);
+  } catch (err) {
+    res.status(403).json({ error: err.message });
+  }
 });
 
 module.exports = router;

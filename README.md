@@ -97,7 +97,7 @@ Atualiza o avatar do usuário autenticado.
 
 ### ✅ GET `/tasks`
 
-Retorna todas as tarefas do usuário autenticado.
+Retorna todas as tarefas do usuário autenticado, incluindo tarefas compartilhadas com ele.
 
 #### 🔒 Protegida? Sim
 
@@ -114,7 +114,8 @@ Retorna todas as tarefas do usuário autenticado.
     "subtasks": [
       { "title": "Ler documentação", "done": true },
       { "title": "Codar exemplo", "done": false }
-    ]
+    ],
+    "sharedWith": ["outro@email.com"]
   }
 ]
 ```
@@ -156,7 +157,7 @@ Cria uma nova tarefa.
 
 ### ✏️ PUT `/tasks/:id`
 
-Atualiza uma tarefa existente.
+Atualiza uma tarefa existente (somente pelo criador).
 
 #### 🔒 Protegida? Sim
 
@@ -177,6 +178,7 @@ Atualiza uma tarefa existente.
 #### 🔎 Regras:
 
 - `subtasks`, se enviado, deve manter o formato de array com objetos `{ title, done }`
+- Apenas o criador da tarefa (`uid`) pode atualizá-la
 
 #### ✅ Resposta:
 
@@ -186,13 +188,41 @@ Atualiza uma tarefa existente.
 
 #### ⚠️ Importante:
 
-- Se o `id` não existir, retorna erro `404`.
+- Se o `id` não existir, retorna erro `404`
+- Se o usuário não for o criador, retorna erro `403`
+
+---
+
+### 🔗 PUT `/tasks/:id/share`
+
+Compartilha a tarefa com outros usuários informando seus e-mails.
+
+#### 🔒 Protegida? Sim
+
+#### 📥 Body:
+
+```json
+{
+  "sharedWith": ["aluno1@email.com", "aluno2@email.com"]
+}
+```
+
+#### 🔎 Regras:
+
+- Apenas o criador da tarefa pode compartilhá-la
+- A lista deve conter e-mails válidos em formato de string
+
+#### ✅ Resposta:
+
+```
+200 OK
+```
 
 ---
 
 ### ❌ DELETE `/tasks/:id`
 
-Remove uma tarefa do usuário.
+Remove uma tarefa do usuário (somente pelo criador).
 
 #### 🔒 Protegida? Sim
 
@@ -230,6 +260,7 @@ O app React Native deverá:
 - Fazer login com Firebase Auth
 - Escolher um dos 5 avatares disponíveis
 - Criar, editar e deletar tarefas
+- Compartilhar tarefas com colegas pelo e-mail
 - Listar tarefas com subtarefas (checklist)
 - Exibir o avatar e nome do usuário no perfil
 
