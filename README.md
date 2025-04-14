@@ -47,7 +47,7 @@ Atualiza o nome do usuário autenticado.
 
 #### 🔒 Protegida? Sim
 
-#### 📅 Body:
+#### 📥 Body:
 
 ```json
 {
@@ -74,7 +74,7 @@ Atualiza o avatar do usuário autenticado.
 
 #### 🔒 Protegida? Sim
 
-#### 📅 Body:
+#### 📥 Body:
 
 ```json
 {
@@ -110,7 +110,11 @@ Retorna todas as tarefas do usuário autenticado.
     "title": "Estudar React Native",
     "description": "Finalizar desafio",
     "done": false,
-    "createdAt": "2025-04-13T14:20:00.000Z"
+    "createdAt": "2025-04-13T14:20:00.000Z",
+    "subtasks": [
+      { "title": "Ler documentação", "done": true },
+      { "title": "Codar exemplo", "done": false }
+    ]
   }
 ]
 ```
@@ -123,15 +127,24 @@ Cria uma nova tarefa.
 
 #### 🔒 Protegida? Sim
 
-#### 📅 Body:
+#### 📥 Body:
 
 ```json
 {
   "title": "Nova tarefa",
   "description": "Descrição opcional",
-  "done": false
+  "done": false,
+  "subtasks": [
+    { "title": "Subtarefa 1", "done": false },
+    { "title": "Subtarefa 2", "done": true }
+  ]
 }
 ```
+
+#### 🔎 Regras:
+
+- `subtasks` é opcional
+- Se enviado, deve ser um array de objetos com `title` (string) e `done` (boolean)
 
 #### ✅ Resposta:
 
@@ -147,15 +160,23 @@ Atualiza uma tarefa existente.
 
 #### 🔒 Protegida? Sim
 
-#### 📅 Body (qualquer campo opcional):
+#### 📥 Body (qualquer campo opcional):
 
 ```json
 {
   "title": "Título atualizado",
   "description": "Nova descrição",
-  "done": true
+  "done": true,
+  "subtasks": [
+    { "title": "Item 1", "done": true },
+    { "title": "Item 2", "done": false }
+  ]
 }
 ```
+
+#### 🔎 Regras:
+
+- `subtasks`, se enviado, deve manter o formato de array com objetos `{ title, done }`
 
 #### ✅ Resposta:
 
@@ -209,7 +230,7 @@ O app React Native deverá:
 - Fazer login com Firebase Auth
 - Escolher um dos 5 avatares disponíveis
 - Criar, editar e deletar tarefas
-- Listar tarefas
+- Listar tarefas com subtarefas (checklist)
 - Exibir o avatar e nome do usuário no perfil
 
 ---

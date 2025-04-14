@@ -11,14 +11,59 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const task = { ...req.body, uid: req.user.uid, createdAt: new Date() };
+  const { title, description = "", done = false, subtasks = [] } = req.body;
+
+  if (!title || typeof title !== "string") {
+    return res.status(400).json({ error: "Título da tarefa é obrigatório" });
+  }
+
+  if (
+    !Array.isArray(subtasks) ||
+    !subtasks.every(
+      (st) => typeof st.title === "string" && typeof st.done === "boolean"
+    )
+  ) {
+    return res.status(400).json({ error: "Formato de subtasks inválido" });
+  }
+
+  const task = {
+    title,
+    description,
+    done,
+    subtasks,
+    uid: req.user.uid,
+    createdAt: new Date(),
+  };
+
   const result = await firestore.createTask(task);
   res.status(201).json(result);
 });
 
 router.put("/:id", async (req, res) => {
-  await firestore.updateTask(req.params.id, req.body);
-  res.sendStatus(200);
+  const { title, description, done, subtasks } = req.body;
+
+  if (
+    subtasks &&
+    (!Array.isArray(subtasks) ||
+      !subtasks.every(
+        (st) => typeof st.title === "string" && typeof st.done === "boolean"
+      ))
+  ) {
+    return res.status(400).json({ error: "Formato de subtasks inválido" });
+  }
+
+  const dataToUpdate = {};
+  if (title) dataToUpdate.title = title;
+  if (description !== undefined) dataToUpdate.description = description;
+  if (done !== undefined) dataToUpdate.done = done;
+  if (subtasks !== undefined) dataToUpdate.subtasks = subtasks;
+
+  try {
+    await firestore.updateTask(req.params.id, dataToUpdate);
+    res.sendStatus(200);
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
 });
 
 router.delete("/:id", async (req, res) => {
