@@ -12,10 +12,26 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { title, description = "", done = false, subtasks = [] } = req.body;
+  const {
+    title,
+    description = "",
+    done = false,
+    subtasks = [],
+    tags = [],
+  } = req.body;
 
   if (!title || typeof title !== "string") {
     return res.status(400).json({ error: "Título da tarefa é obrigatório" });
+  }
+
+  if (
+    !Array.isArray(tags) ||
+    tags.length > 5 ||
+    !tags.every((t) => typeof t === "string")
+  ) {
+    return res
+      .status(400)
+      .json({ error: "Tags inválidas. Use no máximo 5 strings." });
   }
 
   if (
@@ -33,6 +49,7 @@ router.post("/", async (req, res) => {
     done,
     subtasks,
     uid: req.user.uid,
+    tags,
     createdAt: new Date(),
   };
 
@@ -41,7 +58,18 @@ router.post("/", async (req, res) => {
 });
 
 router.put("/:id", async (req, res) => {
-  const { title, description, done, subtasks } = req.body;
+  const { title, description, done, subtasks, tags } = req.body;
+
+  if (
+    tags &&
+    (!Array.isArray(tags) ||
+      tags.length > 5 ||
+      !tags.every((t) => typeof t === "string"))
+  ) {
+    return res
+      .status(400)
+      .json({ error: "Tags inválidas. Use no máximo 5 strings." });
+  }
 
   if (
     subtasks &&
@@ -53,11 +81,12 @@ router.put("/:id", async (req, res) => {
     return res.status(400).json({ error: "Formato de subtasks inválido" });
   }
 
-  const dataToUpdate = {};
+  const dataToUpdate = { uid: req.user.uid };
   if (title) dataToUpdate.title = title;
   if (description !== undefined) dataToUpdate.description = description;
   if (done !== undefined) dataToUpdate.done = done;
   if (subtasks !== undefined) dataToUpdate.subtasks = subtasks;
+  if (tags !== undefined) dataToUpdate.tags = tags;
 
   try {
     await firestore.updateTask(req.params.id, dataToUpdate);
