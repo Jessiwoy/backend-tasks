@@ -145,6 +145,7 @@ Retorna todas as tarefas do usuário autenticado, incluindo tarefas compartilhad
       { "title": "Ler documentação", "done": true },
       { "title": "Codar exemplo", "done": false }
     ],
+    "tags": ["estudo", "react-native"],
     "sharedWith": ["outro@email.com"]
   }
 ]
@@ -168,14 +169,17 @@ Cria uma nova tarefa.
   "subtasks": [
     { "title": "Subtarefa 1", "done": false },
     { "title": "Subtarefa 2", "done": true }
-  ]
+  ],
+  "tags": ["tag1", "tag2"]
 }
 ```
 
 #### 🔎 Regras:
 
-- `subtasks` é opcional
-- Se enviado, deve ser um array de objetos com `title` (string) e `done` (boolean)
+- `subtasks` é opcional.
+- Se enviado, deve ser um array de objetos com `title` (string) e `done` (boolean).
+- `tags` é opcional.
+- Se enviado, deve ser um array de strings com no máximo 5 itens.
 
 #### ✅ Resposta:
 
@@ -201,13 +205,15 @@ Atualiza uma tarefa existente (somente pelo criador).
   "subtasks": [
     { "title": "Item 1", "done": true },
     { "title": "Item 2", "done": false }
-  ]
+  ],
+  "tags": ["tag1", "tag3"]
 }
 ```
 
 #### 🔎 Regras:
 
-- `subtasks`, se enviado, deve manter o formato de array com objetos `{ title, done }`
+- `subtasks`, se enviado, deve manter o formato de array com objetos `{ title, done }`.
+- `tags`, se enviado, deve ser um array de strings com no máximo 5 itens.
 - Apenas o criador da tarefa (`uid`) pode atualizá-la
 
 #### ✅ Resposta:
@@ -233,24 +239,28 @@ Compartilha a tarefa com outros usuários informando seus e-mails.
 
 ```json
 {
-  "sharedWith": ["aluno1@email.com", "aluno2@email.com"]
+  "sharedWith": ["email1@exemplo.com", "email2@exemplo.com"]
 }
 ```
 
 #### 🔎 Regras:
 
-- Apenas o criador da tarefa pode compartilhá-la
-- A lista deve conter e-mails válidos em formato de string
+- Apenas o criador da tarefa pode compartilhá-la.
+- A lista deve conter e-mails válidos em formato de string.
+- Caso algum e-mail não exista no banco de dados, a resposta incluirá os e-mails inválidos.
 
-#### ✅ Resposta:
+#### ✅ Exemplo de resposta (em caso de erro):
 
-```
-200 OK
+```json
+{
+  "error": "Os seguintes e-mails não existem na base de dados",
+  "invalidEmails": ["email_invalido@exemplo.com"]
+}
 ```
 
 ---
 
-### 🔗 GET `/tasks/search-emails`
+### 🔗 GET `/users/search`
 
 Busca usuários pelo e-mail.
 
@@ -267,6 +277,7 @@ Busca usuários pelo e-mail.
 #### 🔎 Regras:
 
 - O campo `query` deve ser uma string não vazia.
+- Retorna no máximo 10 resultados.
 
 #### ✅ Exemplo de resposta:
 
@@ -323,7 +334,7 @@ Lista os comentários de uma tarefa.
 ```json
 [
   {
-    "author": "aluno@email.com",
+    "author": "usuario@exemplo.com",
     "content": "Boa ideia!",
     "createdAt": "2025-04-14T12:34:56.789Z"
   }
