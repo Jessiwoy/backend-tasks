@@ -46,4 +46,33 @@ router.put("/name", async (req, res) => {
   res.sendStatus(200);
 });
 
+router.post("/", async (req, res) => {
+  const { name, phone, picture } = req.body;
+
+  const phoneRegex = /^[0-9]+$/;
+  if (!phone || !phoneRegex.test(phone)) {
+    return res.status(400).json({ error: "Telefone somente com números" });
+  }
+  if (!phone || typeof phone !== "string" || phone.trim() === "") {
+    return res.status(400).json({ error: "Telefone inválido" });
+  }
+
+  if (!picture || !/^avatar_[1-5]$/.test(picture)) {
+    return res.status(400).json({ error: "ID de avatar inválido" });
+  }
+
+  const userRef = admin.firestore().collection("users").doc(req.user.uid);
+  await userRef.set(
+    {
+      name: name.trim(),
+      picture,
+      email: req.user.email,
+      phone: phone.trim(),
+    },
+    { merge: true }
+  );
+
+  res.sendStatus(200);
+});
+
 module.exports = router;

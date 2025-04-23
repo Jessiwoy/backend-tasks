@@ -95,6 +95,36 @@ Atualiza o avatar do usuário autenticado.
 
 ---
 
+### ➕ POST `/profile`
+
+Cria ou atualiza o perfil do usuário autenticado.
+
+#### 🔒 Protegida? Sim
+
+#### 📥 Body:
+
+```json
+{
+  "name": "João da Silva",
+  "phone": "123456789",
+  "picture": "avatar_3"
+}
+```
+
+#### 🔎 Regras:
+
+- O campo `name` deve ser uma string não vazia.
+- O campo `phone` deve conter apenas números.
+- O campo `picture` deve ser um ID válido no formato `avatar_1`, `avatar_2`, ..., `avatar_5`.
+
+#### ✅ Resposta:
+
+```
+200 OK
+```
+
+---
+
 ### ✅ GET `/tasks`
 
 Retorna todas as tarefas do usuário autenticado, incluindo tarefas compartilhadas com ele.
@@ -220,6 +250,88 @@ Compartilha a tarefa com outros usuários informando seus e-mails.
 
 ---
 
+### 🔗 GET `/tasks/search-emails`
+
+Busca usuários pelo e-mail.
+
+#### 🔒 Protegida? Sim
+
+#### 📥 Query Params:
+
+```json
+{
+  "query": "parte_do_email"
+}
+```
+
+#### 🔎 Regras:
+
+- O campo `query` deve ser uma string não vazia.
+
+#### ✅ Exemplo de resposta:
+
+```json
+[
+  {
+    "email": "usuario@email.com",
+    "picture": "avatar_1",
+    "name": "Usuário Teste"
+  }
+]
+```
+
+---
+
+### 💬 Comentários – `/comments`
+
+#### 🔸 POST `/comments`
+
+Adiciona um comentário a uma tarefa específica.
+
+##### 🔒 Protegida? Sim
+
+##### 📥 Body:
+
+```json
+{
+  "taskId": "abc123",
+  "content": "Ótimo progresso!"
+}
+```
+
+##### 🔎 Regras:
+
+- `taskId` deve ser o ID de uma tarefa existente.
+- `content` deve ser uma string não vazia.
+
+##### ✅ Resposta:
+
+```
+201 Created
+```
+
+---
+
+#### 🔸 GET `/comments/:taskId`
+
+Lista os comentários de uma tarefa.
+
+##### 🔒 Protegida? Sim
+
+##### ✅ Exemplo de resposta:
+
+```json
+[
+  {
+    "author": "aluno@email.com",
+    "content": "Boa ideia!",
+    "createdAt": "2025-04-14T12:34:56.789Z"
+  }
+]
+```
+
+---
+
 ### ❌ DELETE `/tasks/:id`
 
 Remove uma tarefa do usuário (somente pelo criador).
@@ -261,6 +373,7 @@ O app React Native deverá:
 - Escolher um dos 5 avatares disponíveis
 - Criar, editar e deletar tarefas
 - Compartilhar tarefas com colegas pelo e-mail
+- Comentar em tarefas
 - Listar tarefas com subtarefas (checklist)
 - Exibir o avatar e nome do usuário no perfil
 

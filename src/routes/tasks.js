@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/auth");
 const firestore = require("../services/firestore");
+const admin = require("firebase-admin");
 
 router.use(auth);
 
@@ -67,7 +68,7 @@ router.put("/:id", async (req, res) => {
 });
 
 router.delete("/:id", async (req, res) => {
-  await firestore.deleteTask(req.params.id);
+  await firestore.deleteTask(req.params.id, req.user.uid);
   res.sendStatus(204);
 });
 
@@ -79,6 +80,25 @@ router.put("/:id/share", async (req, res) => {
     !sharedWith.every((email) => typeof email === "string")
   ) {
     return res.status(400).json({ error: "Lista de e-mails inválida" });
+  }
+
+  const snapshot = await admin
+    .firestore()
+    .collection("users")
+    .where("email", "in", sharedWith)
+    .get();
+
+  const validEmails = snapshot.docs.map((doc) => doc.data().email);
+
+  const invalidEmails = sharedWith.filter(
+    (email) => !validEmails.includes(email)
+  );
+
+  if (invalidEmails.length > 0) {
+    return res.status(400).json({
+      error: "Os seguintes e-mails não existem na base de dados",
+      invalidEmails,
+    });
   }
 
   try {
