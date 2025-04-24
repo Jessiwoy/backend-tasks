@@ -22,6 +22,101 @@ Você pode obter esse token fazendo login com e-mail e senha na API REST do Fire
 
 ---
 
+### 🔑 POST `/auth/register`
+
+Registra um novo usuário.
+
+#### 📥 Body:
+
+```json
+{
+  "email": "usuario@email.com",
+  "password": "senha123",
+  "name": "Usuário Teste",
+  "phone_number": "123456789"
+}
+```
+
+#### 🔎 Regras:
+
+- Todos os campos são obrigatórios.
+- O campo `phone_number` deve conter apenas números.
+
+#### ✅ Resposta:
+
+```json
+{
+  "uid": "abc123xyz",
+  "idToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+---
+
+### 🔑 POST `/auth/login`
+
+Realiza o login de um usuário existente.
+
+#### 📥 Body:
+
+```json
+{
+  "email": "usuario@email.com",
+  "password": "senha123"
+}
+```
+
+#### 🔎 Regras:
+
+- Ambos os campos são obrigatórios.
+
+#### ✅ Resposta:
+
+```json
+{
+  "id_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "refresh_token": "AEu4IL2..."
+}
+```
+
+#### ⚠️ Possíveis erros:
+
+- `401 Unauthorized`: Email ou senha inválidos.
+
+---
+
+### 🔑 POST `/auth/refresh`
+
+Renova o token de autenticação.
+
+#### 📥 Body:
+
+```json
+{
+  "refreshToken": "AEu4IL2..."
+}
+```
+
+#### 🔎 Regras:
+
+- O campo `refreshToken` é obrigatório.
+
+#### ✅ Resposta:
+
+```json
+{
+  "idToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "refreshToken": "AEu4IL2...",
+  "expiresIn": "3600"
+}
+```
+
+#### ⚠️ Possíveis erros:
+
+- `401 Unauthorized`: `refreshToken` inválido ou expirado.
+
+---
+
 ### 👤 GET `/profile`
 
 Retorna os dados do usuário autenticado.
