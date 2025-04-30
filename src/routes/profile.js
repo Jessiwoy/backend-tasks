@@ -1,78 +1,16 @@
 const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/auth");
-const admin = require("firebase-admin");
+const ProfileController = require("../controllers/ProfileController");
 
 router.use(auth);
 
-router.get("/", async (req, res) => {
-  const { uid, email } = req.user;
-  const userRef = admin.firestore().collection("users").doc(uid);
-  const doc = await userRef.get();
+router.get("/", ProfileController.getProfile);
 
-  const data = doc.exists ? doc.data() : {};
+router.put("/avatar", ProfileController.updateAvatar);
 
-  res.json({
-    uid,
-    email,
-    name: data.name || null,
-    picture: data.picture || null,
-  });
-});
+router.put("/name", ProfileController.updateName);
 
-router.put("/avatar", async (req, res) => {
-  const { picture } = req.body;
-
-  if (!picture || !/^avatar_[1-5]$/.test(picture)) {
-    return res.status(400).json({ error: "ID de avatar inválido" });
-  }
-
-  const userRef = admin.firestore().collection("users").doc(req.user.uid);
-  await userRef.set({ picture }, { merge: true });
-
-  res.sendStatus(200);
-});
-
-router.put("/name", async (req, res) => {
-  const { name } = req.body;
-
-  if (!name || typeof name !== "string" || name.trim() === "") {
-    return res.status(400).json({ error: "Nome inválido" });
-  }
-
-  const userRef = admin.firestore().collection("users").doc(req.user.uid);
-  await userRef.set({ name: name.trim() }, { merge: true });
-
-  res.sendStatus(200);
-});
-
-router.post("/", async (req, res) => {
-  const { name, phone, picture } = req.body;
-
-  const phoneRegex = /^[0-9]+$/;
-  if (!phone || !phoneRegex.test(phone)) {
-    return res.status(400).json({ error: "Telefone somente com números" });
-  }
-  if (!phone || typeof phone !== "string" || phone.trim() === "") {
-    return res.status(400).json({ error: "Telefone inválido" });
-  }
-
-  if (!picture || !/^avatar_[1-5]$/.test(picture)) {
-    return res.status(400).json({ error: "ID de avatar inválido" });
-  }
-
-  const userRef = admin.firestore().collection("users").doc(req.user.uid);
-  await userRef.set(
-    {
-      name: name.trim(),
-      picture,
-      email: req.user.email,
-      phone: phone.trim(),
-    },
-    { merge: true }
-  );
-
-  res.sendStatus(200);
-});
+router.post("/", ProfileController.createOrUpdateProfile);
 
 module.exports = router;
