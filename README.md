@@ -386,6 +386,11 @@ Busca usuários pelo e-mail.
 ]
 ```
 
+#### ⚠️ Possíveis erros:
+
+- `400 Bad Request`: Query inválida (vazia ou não é uma string).
+- `404 Not Found`: Nenhum usuário encontrado.
+
 ---
 
 ### 💬 Comentários – `/comments`
@@ -416,6 +421,11 @@ Adiciona um comentário a uma tarefa específica.
 201 Created
 ```
 
+##### ⚠️ Possíveis erros:
+
+- `400 Bad Request`: Campos inválidos.
+- `500 Internal Server Error`: Erro interno ao criar o comentário.
+
 ---
 
 #### 🔸 GET `/comments/:taskId`
@@ -429,12 +439,18 @@ Lista os comentários de uma tarefa.
 ```json
 [
   {
+    "id": "comment123",
     "author": "usuario@exemplo.com",
     "content": "Boa ideia!",
     "createdAt": "2025-04-14T12:34:56.789Z"
   }
 ]
 ```
+
+##### ⚠️ Possíveis erros:
+
+- `404 Not Found`: Nenhum comentário encontrado.
+- `500 Internal Server Error`: Erro interno ao buscar os comentários.
 
 ---
 
