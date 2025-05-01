@@ -1,9 +1,10 @@
 import { Request } from "express";
+import admin from "firebase-admin";
 
 declare global {
   namespace Express {
     interface Request {
-      user?: admin.auth.DecodedIdToken;
+      user: admin.auth.DecodedIdToken;
     }
   }
 }
