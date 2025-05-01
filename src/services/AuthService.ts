@@ -1,7 +1,7 @@
-const admin = require("firebase-admin");
-const { initializeApp } = require("firebase/app");
-const { getAuth, signInWithEmailAndPassword } = require("firebase/auth");
-const fetch = require("node-fetch");
+import admin from "firebase-admin";
+import { initializeApp } from "firebase/app";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { UserModel } from "../model/userModel";
 
 const firebaseConfig = {
   apiKey: process.env.API_KEY,
@@ -12,8 +12,26 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const clientAuth = getAuth(firebaseApp);
 
-class AuthService {
-  static async register(email, password, name, phone_number) {
+export interface AuthService {
+  register(
+    user: Omit<UserModel, "picture">
+  ): Promise<{ uid: string; idToken: string }>;
+  login(
+    email: string,
+    password: string
+  ): Promise<{ id_token: string; refresh_token: string }>;
+  refresh(
+    refreshToken: string
+  ): Promise<{ idToken: string; refreshToken: string; expiresIn: number }>;
+}
+
+class AuthServiceImpl implements AuthService {
+  async register({
+    email,
+    password,
+    name,
+    phone_number,
+  }: Omit<UserModel, "picture">) {
     const userRecord = await admin.auth().createUser({
       email,
       password,
@@ -23,7 +41,7 @@ class AuthService {
     await admin.firestore().collection("users").doc(userRecord.uid).set({
       email,
       name,
-      picture: null,
+      picture: "avatar_1",
       phone_number,
     });
 
@@ -31,7 +49,7 @@ class AuthService {
     return { uid: userRecord.uid, idToken };
   }
 
-  static async login(email, password) {
+  async login(email: string, password: string) {
     const userCredential = await signInWithEmailAndPassword(
       clientAuth,
       email,
@@ -42,7 +60,7 @@ class AuthService {
     return { id_token: token, refresh_token: refreshToken };
   }
 
-  static async refresh(refreshToken) {
+  async refresh(refreshToken: string) {
     const params = new URLSearchParams();
     params.append("grant_type", "refresh_token");
     params.append("refresh_token", refreshToken);
@@ -69,4 +87,4 @@ class AuthService {
   }
 }
 
-module.exports = AuthService;
+export default AuthServiceImpl;
