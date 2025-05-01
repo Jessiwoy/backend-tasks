@@ -17,4 +17,4 @@ router.put("/name", profileController.updateName);
 
 router.post("/", profileController.createOrUpdateProfile);
 
-module.exports = router;
+export default router;

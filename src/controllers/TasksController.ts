@@ -15,6 +15,10 @@ class TasksController {
   }
 
   async getTasks(req: Request, res: Response) {
+    if (req.user.email === undefined) {
+      res.status(400).json({ error: "Email do usuário não encontrado" });
+      return;
+    }
     try {
       const tasks = await this.tasksService.getUserTasks(
         req.user.uid,
