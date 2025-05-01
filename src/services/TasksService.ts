@@ -2,7 +2,7 @@ import admin from "firebase-admin";
 import firestore from "./firestore";
 import { Task } from "../model/taskModel";
 
-interface TaskService {
+export interface TasksService {
   getUserTasks: (uid: string, email: string) => Promise<Task[]>;
   createTask: (task: {
     title: string;
@@ -28,7 +28,7 @@ interface TaskService {
   ) => Promise<{ invalidEmails: string[] }>;
 }
 
-class TasksServiceImpl implements TaskService {
+class TasksServiceImpl implements TasksService {
   async getUserTasks(uid: string, email: string) {
     return await firestore.getUserTasks(uid, email);
   }

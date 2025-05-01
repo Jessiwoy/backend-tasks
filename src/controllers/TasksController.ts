@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import TasksServiceImpl from "../services/TasksService";
+import { TasksService } from "../services/TasksService";
 import {
   BaseTask,
   Subtask,
@@ -8,9 +8,9 @@ import {
 } from "../model/taskModel";
 
 class TasksController {
-  tasksService: TasksServiceImpl;
+  tasksService: TasksService;
 
-  constructor(tasksService: TasksServiceImpl) {
+  constructor(tasksService: TasksService) {
     this.tasksService = tasksService;
   }
 
