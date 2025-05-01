@@ -8,10 +8,12 @@ import {
 } from "../model/taskModel";
 
 class TasksController {
-  tasksService: TasksService;
-
-  constructor(tasksService: TasksService) {
-    this.tasksService = tasksService;
+  constructor(private tasksService: TasksService) {
+    this.getTasks = this.getTasks.bind(this);
+    this.createTask = this.createTask.bind(this);
+    this.updateTask = this.updateTask.bind(this);
+    this.deleteTask = this.deleteTask.bind(this);
+    this.shareTask = this.shareTask.bind(this);
   }
 
   async getTasks(req: Request, res: Response) {

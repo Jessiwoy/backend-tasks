@@ -2,9 +2,9 @@ import { Request, Response } from "express";
 import { CommentService } from "../services/CommentsService";
 
 class CommentsController {
-  private commentsService: CommentService;
-  constructor(commentsService: CommentService) {
-    this.commentsService = commentsService;
+  constructor(private commentsService: CommentService) {
+    this.createComment = this.createComment.bind(this);
+    this.listComments = this.listComments.bind(this);
   }
 
   async createComment(req: Request, res: Response) {

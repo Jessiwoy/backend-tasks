@@ -5,7 +5,7 @@ const db = admin.firestore();
 const getUserTasks = async (uid: string, email: string): Promise<Task[]> => {
   const snapshot = await db
     .collection("tasks")
-    .where("sharedWith", "array-contains-any", email)
+    .where("sharedWith", "array-contains-any", [email])
     .get();
 
   const sharedWithOwn: Task[] = snapshot.docs.map((doc) => {

@@ -1,10 +1,11 @@
 import express from "express";
 import auth from "../middleware/auth";
 import CommentsController from "../controllers/CommentsController";
-import CommentsServiceImpl from "../services/CommentsService";
+import container from "../containers/container";
 
 const router = express.Router();
-const commentsController = new CommentsController(new CommentsServiceImpl());
+const commentsController =
+  container.resolve<CommentsController>("CommentsController");
 
 router.use(auth);
 

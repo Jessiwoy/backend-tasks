@@ -1,9 +1,9 @@
 import { Router } from "express";
 import TasksController from "../controllers/TasksController";
 import authMiddleware from "../middleware/auth";
-import TasksServiceImpl from "../services/TasksService";
+import container from "../containers/container";
 
-const tasksController = new TasksController(new TasksServiceImpl());
+const tasksController = container.resolve<TasksController>("TasksController");
 
 const router = Router();
 

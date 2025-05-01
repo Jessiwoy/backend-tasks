@@ -2,10 +2,11 @@ import { Request, Response } from "express";
 import { ProfileService } from "../services/ProfileService";
 
 class ProfileController {
-  private profileService: ProfileService;
-
-  constructor(profileService: ProfileService) {
-    this.profileService = profileService;
+  constructor(private profileService: ProfileService) {
+    this.getProfile = this.getProfile.bind(this);
+    this.updateAvatar = this.updateAvatar.bind(this);
+    this.updateName = this.updateName.bind(this);
+    this.createOrUpdateProfile = this.createOrUpdateProfile.bind(this);
   }
 
   async getProfile(req: Request, res: Response) {

@@ -1,9 +1,9 @@
 import express from "express";
 import auth from "../middleware/auth";
 import UsersController from "../controllers/UsersController";
-import UsersServiceImpl from "../services/UsersService";
+import container from "../containers/container";
 
-const usersController = new UsersController(new UsersServiceImpl());
+const usersController = container.resolve<UsersController>("UsersController");
 
 const router = express.Router();
 

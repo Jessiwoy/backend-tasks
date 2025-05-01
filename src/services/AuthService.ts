@@ -1,16 +1,8 @@
 import admin from "firebase-admin";
-import { initializeApp } from "firebase/app";
+import { FirebaseApp, FirebaseOptions, initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { UserModel } from "../model/userModel";
-
-const firebaseConfig = {
-  apiKey: process.env.API_KEY,
-  authDomain: process.env.AUTH_DOMAIN,
-  projectId: process.env.PROJECT_ID,
-};
-
-const firebaseApp = initializeApp(firebaseConfig);
-const clientAuth = getAuth(firebaseApp);
+import { Auth } from "firebase/auth/dist/auth";
 
 export interface AuthService {
   register(
@@ -26,6 +18,20 @@ export interface AuthService {
 }
 
 class AuthServiceImpl implements AuthService {
+  private clientAuth: Auth;
+  private firebaseApp: FirebaseApp;
+  private apiConfig: FirebaseOptions;
+
+  constructor() {
+    this.apiConfig = {
+      apiKey: process.env.API_KEY,
+      authDomain: process.env.AUTH_DOMAIN,
+      projectId: process.env.PROJECT_ID,
+    };
+    this.firebaseApp = initializeApp(this.apiConfig);
+    this.clientAuth = getAuth(this.firebaseApp);
+  }
+
   async register({
     email,
     password,
@@ -51,7 +57,7 @@ class AuthServiceImpl implements AuthService {
 
   async login(email: string, password: string) {
     const userCredential = await signInWithEmailAndPassword(
-      clientAuth,
+      this.clientAuth,
       email,
       password
     );

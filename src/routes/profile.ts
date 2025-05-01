@@ -1,9 +1,10 @@
 import express from "express";
 import auth from "../middleware/auth";
 import ProfileController from "../controllers/ProfileController";
-import ProfileServiceImpl from "../services/ProfileService";
+import container from "../containers/container";
 
-const profileController = new ProfileController(new ProfileServiceImpl());
+const profileController =
+  container.resolve<ProfileController>("ProfileController");
 
 const router = express.Router();
 

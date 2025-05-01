@@ -1,8 +1,8 @@
 import express from "express";
 import AuthController from "../controllers/AuthController";
-import AuthServiceImpl from "../services/AuthService";
+import container from "../containers/container";
 
-const authController = new AuthController(new AuthServiceImpl());
+const authController = container.resolve<AuthController>("AuthController");
 
 const router = express.Router();
 

@@ -2,10 +2,12 @@ import { Request, Response } from "express";
 import { AuthService } from "../services/AuthService";
 
 class AuthController {
-  private authService: AuthService;
-  constructor(authService: AuthService) {
-    this.authService = authService;
+  constructor(private authService: AuthService) {
+    this.register = this.register.bind(this);
+    this.login = this.login.bind(this);
+    this.refresh = this.refresh.bind(this);
   }
+
   async register(req: Request, res: Response) {
     const { email, password, name, phone_number } = req.body;
 
@@ -39,7 +41,10 @@ class AuthController {
       const result = await this.authService.login(email, password);
       res.json(result);
     } catch (err) {
-      res.status(401).json({ error: "Email ou senha inválidos" });
+      console.error("Erro ao fazer login:", err);
+      res
+        .status(401)
+        .json({ error: "Email ou senha inválidos", falha: err as Error });
     }
   }
 

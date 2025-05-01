@@ -2,9 +2,8 @@ import { Request, Response } from "express";
 import { UsersService } from "../services/UsersService";
 
 class UsersController {
-  private usersService: UsersService;
-  constructor(usersService: UsersService) {
-    this.usersService = usersService;
+  constructor(private usersService: UsersService) {
+    this.search = this.search.bind(this);
   }
 
   async search(req: Request, res: Response): Promise<void> {
