@@ -56,11 +56,30 @@ class AuthServiceImpl implements AuthService {
   }
 
   async login(email: string, password: string) {
+    // lidar com o erro de login
     const userCredential = await signInWithEmailAndPassword(
       this.clientAuth,
       email,
       password
-    );
+    ).catch((error) => {
+      throw new Error("Email ou senha inválidos");
+    });
+
+    if (!userCredential) {
+      throw new Error("Email ou senha inválidos");
+    }
+
+    // Obter o token de ID e o token de atualização
+    if (!userCredential.user) {
+      throw new Error("Erro ao obter credenciais do usuário");
+    }
+    if (!userCredential.user.getIdToken) {
+      throw new Error("Erro ao obter token de ID");
+    }
+    if (!userCredential.user.refreshToken) {
+      throw new Error("Erro ao obter token de atualização");
+    }
+
     const token = await userCredential.user.getIdToken();
     const refreshToken = userCredential.user.refreshToken;
     return { id_token: token, refresh_token: refreshToken };

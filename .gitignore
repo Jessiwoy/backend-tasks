@@ -2,4 +2,3 @@ node_modules
 firebase-service-account.json
 package-lock.json
 .env
-dist

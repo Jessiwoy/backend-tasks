@@ -18,4 +18,6 @@ router.put("/name", profileController.updateName);
 
 router.post("/", profileController.createOrUpdateProfile);
 
+router.delete("/delete-account", profileController.deleteAccount);
+
 export default router;

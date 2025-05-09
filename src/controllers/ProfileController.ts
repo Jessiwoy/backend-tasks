@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { ProfileService } from "../services/ProfileService";
+import { User } from "firebase/auth";
 
 class ProfileController {
   constructor(private profileService: ProfileService) {
@@ -7,6 +8,7 @@ class ProfileController {
     this.updateAvatar = this.updateAvatar.bind(this);
     this.updateName = this.updateName.bind(this);
     this.createOrUpdateProfile = this.createOrUpdateProfile.bind(this);
+    this.deleteAccount = this.deleteAccount.bind(this);
   }
 
   async getProfile(req: Request, res: Response) {
@@ -91,6 +93,18 @@ class ProfileController {
     });
 
     res.sendStatus(200);
+  }
+
+  async deleteAccount(req: Request, res: Response) {
+    const { uid } = req.user;
+
+    try {
+      await this.profileService.deleteUserAccount(uid);
+      res.sendStatus(200);
+    } catch (error) {
+      console.error("Error deleting user account:", error);
+      res.status(500).json({ error: "Erro ao deletar conta do usuário" });
+    }
   }
 }
 

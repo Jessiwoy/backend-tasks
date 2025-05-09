@@ -1,11 +1,11 @@
 import admin from "firebase-admin";
 import { Profile } from "../model/profileModel";
-
 export interface ProfileService {
   getUserProfile: (uid: string) => Promise<Profile>;
   updateUserAvatar: (uid: string, picture: string) => Promise<void>;
   updateUserName: (uid: string, name: string) => Promise<void>;
   createOrUpdateUserProfile: (profile: Profile) => Promise<void>;
+  deleteUserAccount: (uid: string) => Promise<void>;
 }
 
 class ProfileServiceImpl implements ProfileService {
@@ -45,6 +45,12 @@ class ProfileServiceImpl implements ProfileService {
       },
       { merge: true }
     );
+  }
+
+  async deleteUserAccount(uid: string) {
+    const userRef = admin.firestore().collection("users").doc(uid);
+    await userRef.delete();
+    admin.auth().deleteUser(uid);
   }
 }
 

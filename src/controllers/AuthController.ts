@@ -41,7 +41,6 @@ class AuthController {
       const result = await this.authService.login(email, password);
       res.json(result);
     } catch (err) {
-      console.error("Erro ao fazer login:", err);
       res
         .status(401)
         .json({ error: "Email ou senha inválidos", falha: err as Error });
