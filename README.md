@@ -20,8 +20,6 @@ Você pode obter esse token fazendo login com e-mail e senha na API REST do Fire
 
 ## 📚 Rotas da API
 
----
-
 ### 🔑 POST `/auth/register`
 
 Registra um novo usuário.
@@ -79,10 +77,6 @@ Realiza o login de um usuário existente.
 }
 ```
 
-#### ⚠️ Possíveis erros:
-
-- `401 Unauthorized`: Email ou senha inválidos.
-
 ---
 
 ### 🔑 POST `/auth/refresh`
@@ -110,10 +104,6 @@ Renova o token de autenticação.
   "expiresIn": "3600"
 }
 ```
-
-#### ⚠️ Possíveis erros:
-
-- `401 Unauthorized`: `refreshToken` inválido ou expirado.
 
 ---
 
@@ -152,8 +142,7 @@ Atualiza o nome do usuário autenticado.
 
 #### 🔎 Regras:
 
-- O campo `name` deve ser uma string não vazia
-- O nome é salvo no Firestore na coleção `users`
+- O campo `name` deve ser uma string não vazia.
 
 #### ✅ Resposta:
 
@@ -179,8 +168,7 @@ Atualiza o avatar do usuário autenticado.
 
 #### 🔎 Regras:
 
-- O campo `picture` deve ser um ID válido no formato `avatar_1`, `avatar_2`, ..., `avatar_5`
-- O aplicativo deve tratar o ID e renderizar a imagem correspondente
+- O campo `picture` deve ser um ID válido no formato `avatar_1`, `avatar_2`, ..., `avatar_5`.
 
 #### ✅ Resposta:
 
@@ -201,7 +189,7 @@ Cria ou atualiza o perfil do usuário autenticado.
 ```json
 {
   "name": "João da Silva",
-  "phone": "123456789",
+  "phone_number": "123456789",
   "picture": "avatar_3"
 }
 ```
@@ -209,7 +197,7 @@ Cria ou atualiza o perfil do usuário autenticado.
 #### 🔎 Regras:
 
 - O campo `name` deve ser uma string não vazia.
-- O campo `phone` deve conter apenas números.
+- O campo `phone_number` deve conter apenas números.
 - O campo `picture` deve ser um ID válido no formato `avatar_1`, `avatar_2`, ..., `avatar_5`.
 
 #### ✅ Resposta:
@@ -309,18 +297,13 @@ Atualiza uma tarefa existente (somente pelo criador).
 
 - `subtasks`, se enviado, deve manter o formato de array com objetos `{ title, done }`.
 - `tags`, se enviado, deve ser um array de strings com no máximo 5 itens.
-- Apenas o criador da tarefa (`uid`) pode atualizá-la
+- Apenas o criador da tarefa (`uid`) pode atualizá-la.
 
 #### ✅ Resposta:
 
 ```
 200 OK
 ```
-
-#### ⚠️ Importante:
-
-- Se o `id` não existir, retorna erro `404`
-- Se o usuário não for o criador, retorna erro `403`
 
 ---
 
@@ -386,11 +369,6 @@ Busca usuários pelo e-mail.
 ]
 ```
 
-#### ⚠️ Possíveis erros:
-
-- `400 Bad Request`: Query inválida (vazia ou não é uma string).
-- `404 Not Found`: Nenhum usuário encontrado.
-
 ---
 
 ### 💬 Comentários – `/comments`
@@ -421,11 +399,6 @@ Adiciona um comentário a uma tarefa específica.
 201 Created
 ```
 
-##### ⚠️ Possíveis erros:
-
-- `400 Bad Request`: Campos inválidos.
-- `500 Internal Server Error`: Erro interno ao criar o comentário.
-
 ---
 
 #### 🔸 GET `/comments/:taskId`
@@ -447,16 +420,25 @@ Lista os comentários de uma tarefa.
 ]
 ```
 
-##### ⚠️ Possíveis erros:
-
-- `404 Not Found`: Nenhum comentário encontrado.
-- `500 Internal Server Error`: Erro interno ao buscar os comentários.
-
 ---
 
 ### ❌ DELETE `/tasks/:id`
 
 Remove uma tarefa do usuário (somente pelo criador).
+
+#### 🔒 Protegida? Sim
+
+#### ✅ Resposta:
+
+```
+200 OK
+```
+
+---
+
+### ❌ DELETE `/profile/delete-account`
+
+Remove a conta do usuário autenticado.
 
 #### 🔒 Protegida? Sim
 
@@ -482,7 +464,7 @@ Remove uma tarefa do usuário (somente pelo criador).
 ## 🚀 Deploy sugerido
 
 - Subir este backend em uma instância EC2 da AWS
-- Utilizar `pm2` para manter o servidor rodando
+- Utilizar `docker` para manter o servidor rodando
 - Configurar porta (ex: 3000) e liberar via Security Group
 
 ---
@@ -491,13 +473,13 @@ Remove uma tarefa do usuário (somente pelo criador).
 
 O app React Native deverá:
 
-- Fazer login com Firebase Auth
-- Escolher um dos 5 avatares disponíveis
-- Criar, editar e deletar tarefas
-- Compartilhar tarefas com colegas pelo e-mail
-- Comentar em tarefas
-- Listar tarefas com subtarefas (checklist)
-- Exibir o avatar e nome do usuário no perfil
+- Fazer login com Firebase Auth.
+- Escolher um dos 5 avatares disponíveis.
+- Criar, editar e deletar tarefas.
+- Compartilhar tarefas com colegas pelo e-mail.
+- Comentar em tarefas.
+- Listar tarefas com subtarefas (checklist).
+- Exibir o avatar e nome do usuário no perfil.
 
 ---
 
