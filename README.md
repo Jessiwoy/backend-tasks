@@ -457,7 +457,7 @@ Remove a conta do usuário autenticado.
 - Firebase Admin SDK
 - Firestore
 - JWT (via Firebase Auth)
-- PM2 (para produção)
+- DOCKER
 
 ---
 
