@@ -222,6 +222,8 @@ Retorna todas as tarefas do usuário autenticado, incluindo tarefas compartilhad
     "id": "123abc",
     "title": "Estudar React Native",
     "description": "Finalizar desafio",
+    "deadline": "13/04/2025",
+    "priority": 2,
     "done": false,
     "createdAt": "2025-04-13T14:20:00.000Z",
     "subtasks": [
@@ -249,6 +251,8 @@ Cria uma nova tarefa.
   "title": "Nova tarefa",
   "description": "Descrição opcional",
   "done": false,
+  "deadline": "15/04/2025",
+  "priority": 3,
   "subtasks": [
     { "title": "Subtarefa 1", "done": false },
     { "title": "Subtarefa 2", "done": true }
@@ -259,15 +263,19 @@ Cria uma nova tarefa.
 
 #### 🔎 Regras:
 
-- `subtasks` é opcional.
-- Se enviado, deve ser um array de objetos com `title` (string) e `done` (boolean).
-- `tags` é opcional.
-- Se enviado, deve ser um array de strings com no máximo 5 itens.
+- `title` é obrigatório e deve ser uma string não vazia.
+- `description` é opcional.
+- `deadline` é obrigatório e deve estar no formato `dd/mm/yyyy`.
+- `priority` é opcional e deve ser um número entre 1 (alta) e 3 (baixa). O padrão é 3.
+- `subtasks` é opcional. Se enviado, deve ser um array de objetos com `title` (string) e `done` (boolean).
+- `tags` é opcional. Se enviado, deve ser um array de strings com no máximo 5 itens.
 
 #### ✅ Resposta:
 
-```
-201 Created
+```json
+{
+  "id": "123abc"
+}
 ```
 
 ---
@@ -284,6 +292,8 @@ Atualiza uma tarefa existente (somente pelo criador).
 {
   "title": "Título atualizado",
   "description": "Nova descrição",
+  "deadline": "20/04/2025",
+  "priority": 1,
   "done": true,
   "subtasks": [
     { "title": "Item 1", "done": true },
@@ -295,7 +305,12 @@ Atualiza uma tarefa existente (somente pelo criador).
 
 #### 🔎 Regras:
 
-- `subtasks`, se enviado, deve manter o formato de array com objetos `{ title, done }`.
+- `title`, se enviado, deve ser uma string não vazia.
+- `description`, se enviado, é opcional.
+- `deadline`, se enviado, deve estar no formato `dd/mm/yyyy`.
+- `priority`, se enviado, deve ser um número entre 1 (alta) e 3 (baixa).
+- `done`, se enviado, deve ser um booleano.
+- `subtasks`, se enviado, deve ser um array de objetos com `title` (string) e `done` (boolean).
 - `tags`, se enviado, deve ser um array de strings com no máximo 5 itens.
 - Apenas o criador da tarefa (`uid`) pode atualizá-la.
 
