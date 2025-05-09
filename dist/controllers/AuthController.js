@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const isValidPhoneNumberFormat_1 = require("../utils/isValidPhoneNumberFormat");
 class AuthController {
     constructor(authService) {
         this.authService = authService;
@@ -11,6 +12,12 @@ class AuthController {
         const { email, password, name, phone_number } = req.body;
         if (!email || !password || !name || !phone_number) {
             res.status(400).json({ error: "Campos obrigatórios ausentes" });
+            return;
+        }
+        if (!(0, isValidPhoneNumberFormat_1.isValidPhoneNumberFormat)(phone_number)) {
+            res.status(400).json({
+                error: "Número de telefone inválido. Use o padrão 11912345678.",
+            });
             return;
         }
         try {

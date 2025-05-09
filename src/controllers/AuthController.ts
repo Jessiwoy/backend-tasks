@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { AuthService } from "../services/AuthService";
+import { isValidPhoneNumberFormat } from "../utils/isValidPhoneNumberFormat";
 
 class AuthController {
   constructor(private authService: AuthService) {
@@ -13,6 +14,13 @@ class AuthController {
 
     if (!email || !password || !name || !phone_number) {
       res.status(400).json({ error: "Campos obrigatórios ausentes" });
+      return;
+    }
+
+    if (!isValidPhoneNumberFormat(phone_number)) {
+      res.status(400).json({
+        error: "Número de telefone inválido. Use o padrão 11912345678.",
+      });
       return;
     }
 

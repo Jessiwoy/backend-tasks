@@ -13,15 +13,7 @@ class ProfileServiceImpl {
         }
         return doc.data();
     }
-    async updateUserAvatar(uid, picture) {
-        const userRef = firebase_admin_1.default.firestore().collection("users").doc(uid);
-        await userRef.set({ picture }, { merge: true });
-    }
-    async updateUserName(uid, name) {
-        const userRef = firebase_admin_1.default.firestore().collection("users").doc(uid);
-        await userRef.set({ name: name.trim() }, { merge: true });
-    }
-    async createOrUpdateUserProfile({ uid, email, name, phone_number, picture, }) {
+    async updateUserProfile({ uid, email, name, phone_number, picture, }) {
         const userRef = firebase_admin_1.default.firestore().collection("users").doc(uid);
         await userRef.set({
             name: name.trim(),

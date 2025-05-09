@@ -12,11 +12,7 @@ router.use(auth);
 
 router.get("/", profileController.getProfile);
 
-router.put("/avatar", profileController.updateAvatar);
-
-router.put("/name", profileController.updateName);
-
-router.post("/", profileController.createOrUpdateProfile);
+router.put("/", profileController.updateProfile);
 
 router.delete("/delete-account", profileController.deleteAccount);
 

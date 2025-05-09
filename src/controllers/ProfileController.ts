@@ -1,13 +1,11 @@
 import { Request, Response } from "express";
 import { ProfileService } from "../services/ProfileService";
-import { User } from "firebase/auth";
+import { isValidPhoneNumberFormat } from "../utils/isValidPhoneNumberFormat";
 
 class ProfileController {
   constructor(private profileService: ProfileService) {
     this.getProfile = this.getProfile.bind(this);
-    this.updateAvatar = this.updateAvatar.bind(this);
-    this.updateName = this.updateName.bind(this);
-    this.createOrUpdateProfile = this.createOrUpdateProfile.bind(this);
+    this.updateProfile = this.updateProfile.bind(this);
     this.deleteAccount = this.deleteAccount.bind(this);
   }
 
@@ -19,6 +17,7 @@ class ProfileController {
       res.status(200).json({
         uid,
         email,
+        phone_number: data.phone_number || null,
         name: data.name || null,
         picture: data.picture || null,
       });
@@ -28,44 +27,13 @@ class ProfileController {
     }
   }
 
-  async updateAvatar(req: Request, res: Response) {
-    const { picture } = req.body;
-
-    if (!picture || !/^avatar_[1-5]$/.test(picture)) {
-      res.status(400).json({ error: "ID de avatar inválido" });
-      return;
-    }
-
-    await this.profileService.updateUserAvatar(req.user.uid, picture);
-    res.sendStatus(200);
-  }
-
-  async updateName(req: Request, res: Response) {
-    const { name } = req.body;
-
-    if (!name || typeof name !== "string" || name.trim() === "") {
-      res.status(400).json({ error: "Nome inválido" });
-      return;
-    }
-
-    await this.profileService.updateUserName(req.user.uid, name);
-    res.sendStatus(200);
-  }
-
-  async createOrUpdateProfile(req: Request, res: Response) {
+  async updateProfile(req: Request, res: Response) {
     const { name, phone_number, picture } = req.body;
 
-    const phoneRegex = /^[0-9]+$/;
-    if (!phone_number || !phoneRegex.test(phone_number)) {
-      res.status(400).json({ error: "Telefone somente com números" });
-      return;
-    }
-    if (
-      !phone_number ||
-      typeof phone_number !== "string" ||
-      phone_number.trim() === ""
-    ) {
-      res.status(400).json({ error: "Telefone inválido" });
+    if (!isValidPhoneNumberFormat(phone_number)) {
+      res.status(400).json({
+        error: "Número de telefone inválido. Use o padrão 11912345678.",
+      });
       return;
     }
 
@@ -84,7 +52,7 @@ class ProfileController {
       return;
     }
 
-    await this.profileService.createOrUpdateUserProfile({
+    await this.profileService.updateUserProfile({
       uid: req.user.uid,
       email: req.user.email,
       name,

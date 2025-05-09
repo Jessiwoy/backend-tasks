@@ -31,7 +31,7 @@ Registra um novo usuário.
   "email": "usuario@email.com",
   "password": "senha123",
   "name": "Usuário Teste",
-  "phone_number": "123456789"
+  "phone_number": "81912345678"
 }
 ```
 
@@ -120,67 +120,16 @@ Retorna os dados do usuário autenticado.
   "uid": "abc123xyz",
   "email": "usuario@email.com",
   "name": "Usuário Teste",
+  "phone_number": "81912345678",
   "picture": "avatar_2"
 }
 ```
 
 ---
 
-### 👤 PUT `/profile/name`
+### ➕ PUT `/profile`
 
-Atualiza o nome do usuário autenticado.
-
-#### 🔒 Protegida? Sim
-
-#### 📥 Body:
-
-```json
-{
-  "name": "João da Silva"
-}
-```
-
-#### 🔎 Regras:
-
-- O campo `name` deve ser uma string não vazia.
-
-#### ✅ Resposta:
-
-```
-200 OK
-```
-
----
-
-### 👤 PUT `/profile/avatar`
-
-Atualiza o avatar do usuário autenticado.
-
-#### 🔒 Protegida? Sim
-
-#### 📥 Body:
-
-```json
-{
-  "picture": "avatar_3"
-}
-```
-
-#### 🔎 Regras:
-
-- O campo `picture` deve ser um ID válido no formato `avatar_1`, `avatar_2`, ..., `avatar_5`.
-
-#### ✅ Resposta:
-
-```
-200 OK
-```
-
----
-
-### ➕ POST `/profile`
-
-Cria ou atualiza o perfil do usuário autenticado.
+Atualiza o perfil do usuário autenticado.
 
 #### 🔒 Protegida? Sim
 
@@ -189,7 +138,7 @@ Cria ou atualiza o perfil do usuário autenticado.
 ```json
 {
   "name": "João da Silva",
-  "phone_number": "123456789",
+  "phone_number": "11912341234",
   "picture": "avatar_3"
 }
 ```
