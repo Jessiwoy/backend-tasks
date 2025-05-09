@@ -1,7 +1,9 @@
 export interface BaseTask {
   title: string;
   description: string;
+  deadline: string;
   createdAt: Date;
+  priority: number;
   done: boolean;
 }
 

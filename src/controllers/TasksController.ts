@@ -6,6 +6,7 @@ import {
   Taggable,
   UserIndentifiable,
 } from "../model/taskModel";
+import { isValidDeadlineFormat } from "../utils/isValidDeadlineFormat";
 
 class TasksController {
   constructor(private tasksService: TasksService) {
@@ -33,13 +34,24 @@ class TasksController {
   }
 
   async createTask(
-    req: Request<unknown, unknown, Pick<BaseTask, "title" | "description">>,
+    req: Request<
+      unknown,
+      unknown,
+      Pick<BaseTask, "title" | "description" | "deadline">
+    >,
     res: Response
   ): Promise<void> {
-    const { title, description = "" } = req.body;
+    const { title, description = "", deadline } = req.body;
 
     if (!title || typeof title !== "string") {
       res.status(400).json({ error: "Título da tarefa é obrigatório" });
+      return;
+    }
+
+    if (!isValidDeadlineFormat(deadline)) {
+      res
+        .status(400)
+        .json({ error: "Formato de deadline inválido. Use dd/mm/yyyy." });
       return;
     }
 
@@ -47,7 +59,9 @@ class TasksController {
       const task: BaseTask & UserIndentifiable = {
         title,
         description,
+        deadline,
         uid: req.user.uid,
+        priority: 3,
         createdAt: new Date(),
         done: false,
       };
@@ -66,7 +80,8 @@ class TasksController {
     >,
     res: Response
   ): Promise<void> {
-    const { title, description, done, subtasks, tags } = req.body;
+    const { title, description, done, subtasks, tags, priority, deadline } =
+      req.body;
 
     if (
       tags &&
@@ -91,6 +106,23 @@ class TasksController {
       return;
     }
 
+    if (
+      priority &&
+      (typeof priority !== "number" || priority < 1 || priority > 3)
+    ) {
+      res
+        .status(400)
+        .json({ error: "Prioridade deve ser um número entre 1 e 3" });
+      return;
+    }
+
+    if (!isValidDeadlineFormat(deadline || "")) {
+      res
+        .status(400)
+        .json({ error: "Formato de deadline inválido. Use dd/mm/yyyy." });
+      return;
+    }
+
     const dataToUpdate: UserIndentifiable &
       Partial<BaseTask & Taggable & { subtasks?: Subtask[] }> = {
       uid: req.user.uid,
@@ -100,6 +132,8 @@ class TasksController {
     if (done !== undefined) dataToUpdate.done = done;
     if (subtasks !== undefined) dataToUpdate.subtasks = subtasks;
     if (tags !== undefined) dataToUpdate.tags = tags;
+    if (priority !== undefined) dataToUpdate.priority = priority;
+    if (deadline !== undefined) dataToUpdate.deadline = deadline;
 
     try {
       await this.tasksService.updateTask(req.params.id, dataToUpdate);
