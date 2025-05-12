@@ -72,14 +72,7 @@ class TasksController {
     }
   }
 
-  async updateTask(
-    req: Request<
-      { id: string },
-      unknown,
-      Partial<BaseTask & Taggable & { subtasks?: Subtask[] }>
-    >,
-    res: Response
-  ): Promise<void> {
+  async updateTask(req: Request, res: Response): Promise<void> {
     const { title, description, done, subtasks, tags, priority, deadline } =
       req.body;
 

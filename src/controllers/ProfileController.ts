@@ -22,7 +22,6 @@ class ProfileController {
         picture: data.picture || null,
       });
     } catch (error) {
-      console.error("Error fetching user profile:", error);
       res.status(500).json({ error: "Erro ao buscar perfil do usuário" });
     }
   }
@@ -70,7 +69,6 @@ class ProfileController {
       await this.profileService.deleteUserAccount(uid);
       res.sendStatus(200);
     } catch (error) {
-      console.error("Error deleting user account:", error);
       res.status(500).json({ error: "Erro ao deletar conta do usuário" });
     }
   }
