@@ -29,7 +29,7 @@ describe("CommentsController", () => {
 
   describe("createComment", () => {
     it("should return 400 if required fields are missing", async () => {
-      req.body = { content: "Test comment" }; // Missing taskId
+      req.body = { content: "Test comment" };
       req.user = {
         email: "user@example.com",
         aud: "",
@@ -58,7 +58,7 @@ describe("CommentsController", () => {
         iss: "",
         sub: "",
         uid: "",
-      } as DecodedIdToken; // Missing email
+      } as DecodedIdToken;
 
       await commentsController.createComment(req as Request, res as Response);
       expect(res.status).toHaveBeenCalledWith(401);
@@ -119,7 +119,7 @@ describe("CommentsController", () => {
 
   describe("listComments", () => {
     it("should return 404 if taskId is missing", async () => {
-      req.params = {}; // Missing taskId
+      req.params = {};
 
       await commentsController.listComments(req as Request, res as Response);
       expect(res.status).toHaveBeenCalledWith(404);
@@ -127,7 +127,7 @@ describe("CommentsController", () => {
     });
 
     it("should return 404 if taskId is not a string", async () => {
-      req.params = { taskId: 123 as unknown as string }; // Invalid taskId type
+      req.params = { taskId: 123 as unknown as string };
 
       await commentsController.listComments(req as Request, res as Response);
       expect(res.status).toHaveBeenCalledWith(404);

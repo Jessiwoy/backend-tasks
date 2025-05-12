@@ -204,7 +204,6 @@ describe("TasksController", () => {
         deadline: "01/01/2024",
       };
 
-      // Mock the service to resolve successfully
       (tasksService.updateTask as jest.Mock).mockResolvedValue({
         title: "Updated Task",
         description: "Updated description",
@@ -217,7 +216,6 @@ describe("TasksController", () => {
 
       await tasksController.updateTask(req as Request, res as Response);
 
-      // Ensure sendStatus is called with 200
       expect(res.sendStatus).toHaveBeenCalledWith(200);
     });
 

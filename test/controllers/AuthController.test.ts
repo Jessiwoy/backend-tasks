@@ -27,7 +27,7 @@ describe("AuthController", () => {
 
   describe("register", () => {
     it("should return 400 if required fields are missing", async () => {
-      req.body = { email: "test@example.com", password: "123456" }; // Missing name and phone_number
+      req.body = { email: "test@example.com", password: "123456" };
       await authController.register(req as Request, res as Response);
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith({
@@ -41,7 +41,7 @@ describe("AuthController", () => {
         password: "123456",
         name: "Test User",
         phone_number: "12345",
-      }; // Invalid phone number
+      };
       await authController.register(req as Request, res as Response);
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith({
