@@ -85,7 +85,7 @@ describe("AuthController", () => {
 
   describe("login", () => {
     it("should return 400 if email or password is missing", async () => {
-      req.body = { email: "test@example.com" }; // Missing password
+      req.body = { email: "test@example.com" };
       await authController.login(req as Request, res as Response);
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith({
@@ -128,7 +128,7 @@ describe("AuthController", () => {
 
   describe("refresh", () => {
     it("should return 400 if refreshToken is missing", async () => {
-      req.body = {}; // Missing refreshToken
+      req.body = {};
       await authController.refresh(req as Request, res as Response);
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith({
