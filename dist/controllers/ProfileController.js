@@ -21,7 +21,6 @@ class ProfileController {
             });
         }
         catch (error) {
-            console.error("Error fetching user profile:", error);
             res.status(500).json({ error: "Erro ao buscar perfil do usuário" });
         }
     }
@@ -61,7 +60,6 @@ class ProfileController {
             res.sendStatus(200);
         }
         catch (error) {
-            console.error("Error deleting user account:", error);
             res.status(500).json({ error: "Erro ao deletar conta do usuário" });
         }
     }
