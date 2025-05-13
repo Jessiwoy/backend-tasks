@@ -1,8 +1,4 @@
-# 📱 API do Desafio React Native – Backend com Firebase + Firestore
-
-Backend criado para o desafio de React Native com autenticação via Firebase e banco de dados Firestore.
-
----
+# 📱 API com Firebase + Firestore
 
 ## 🔐 Autenticação
 
@@ -418,6 +414,8 @@ Remove a conta do usuário autenticado.
 
 - Node.js
 - Express
+- Typescript
+- Jest
 - Firebase Admin SDK
 - Firestore
 - JWT (via Firebase Auth)
@@ -430,20 +428,6 @@ Remove a conta do usuário autenticado.
 - Subir este backend em uma instância EC2 da AWS
 - Utilizar `docker` para manter o servidor rodando
 - Configurar porta (ex: 3000) e liberar via Security Group
-
----
-
-## 👨‍🏫 Projeto para alunos
-
-O app React Native deverá:
-
-- Fazer login com Firebase Auth.
-- Escolher um dos 5 avatares disponíveis.
-- Criar, editar e deletar tarefas.
-- Compartilhar tarefas com colegas pelo e-mail.
-- Comentar em tarefas.
-- Listar tarefas com subtarefas (checklist).
-- Exibir o avatar e nome do usuário no perfil.
 
 ---
 
