@@ -1,13 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import admin from "firebase-admin";
 import { ServiceAccount } from "firebase-admin";
-import serviceAccount from '../../firebase-service-account.json';
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount as ServiceAccount),
-});
-
-/*admin.initializeApp({
   credential: admin.credential.cert({
     type: process.env.TYPE,
     project_id: process.env.PROJECT_ID,
@@ -21,7 +16,7 @@ admin.initializeApp({
     client_x509_cert_url: process.env.CLIENT_X509_CERT_URL,
     universe_domain: process.env.UNIVERSE_DOMAIN,
   } as ServiceAccount),
-}); */
+});
 
 const authMiddleware = async (
   req: Request,
